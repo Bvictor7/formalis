@@ -1,0 +1,12 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: formalismysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: formalis
+    # ports:
+    #   - '3306:3306'   # ← tu peux commenter ou changer le port
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+

@@ -1,0 +1,62 @@
+
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: formalismysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: formalis_db
+      MYSQL_USER: formalis_user
+      MYSQL_PASSWORD: formalis_pass
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - formalis-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  node-app:
+    build: ./node-app
+    image: formalis-node-app
+    container_name: formalis-node
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: mysql
+      DB_USER: formalis_user
+      DB_PASSWORD: formalis_pass
+      DB_NAME: formalis_db
+      NODE_ENV: development
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - formalis-net
+    volumes:
+      - ./node-app:/usr/src/app
+      - /usr/src/app/node_modules
+
+  nginx:
+    image: nginx:latest
+    container_name: formalis-nginx
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - node-app
+    networks:
+      - formalis-net
+
+networks:
+  formalis-net:
+    driver: bridge
+
+volumes:
+  mysql-data:

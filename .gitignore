@@ -1,0 +1,5 @@
+mysql/mysql-data/
+node_modules/
+*.log
+nginx/ssl/*.key
+nginx/ssl/*.crt
