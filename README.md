@@ -88,16 +88,14 @@ curl http://localhost:3000/api/health
 Réponse attendue : {"message":"API Formalis OK"}
 
 Renouvellement Automatique des Certificats
-Préparer le script et le log
 sudo touch /var/log/formalis-cert-renew.log
 sudo chmod 666 /var/log/formalis-cert-renew.log
 chmod +x scripts/renew-cert.sh
 
-Configurer la tâche cron
 crontab -e
 
 
-Ajouter la ligne suivante (renouvellement tous les 90 jours à 3h) :
+Ajouter la ligne suivante :
 
 0 3 1 */3 * /home/VOTRE_USER/formalis/scripts/renew-cert.sh
 
@@ -113,7 +111,6 @@ Tester le script manuellement :
 cat /var/log/formalis-cert-renew.log
 
 Commandes Docker Utiles
-Gestion des conteneurs
 docker compose up -d
 docker compose down
 docker compose ps
@@ -123,12 +120,10 @@ docker compose logs -f mysql
 docker compose restart nginx
 docker compose up -d --build
 
-Accès aux conteneurs
 docker exec -it formalis-node sh
 docker exec -it formalismysql mysql -u formalis_user -p
 docker exec formalis-nginx ls -la /etc/letsencrypt/live/formation.local/
 
-Nettoyage
 docker compose down
 docker compose down -v
 docker system prune -a
@@ -226,18 +221,6 @@ Développer et commiter
 Push et créer une Pull Request vers dev
 
 Après validation, merge dans main
-
-Ressources
-
-Documentation Docker Compose
-
-Documentation NGINX
-
-Let's Encrypt - Certbot
-
-Node.js Best Practices
-
-MySQL Docker Hub
 
 Version: 1.0.0
 Dernière mise à jour: Novembre 2025
